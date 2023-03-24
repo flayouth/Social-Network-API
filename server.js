@@ -9,12 +9,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   console.log(`Connected to MongoDB at ${db.host}:${db.port}`);
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
   });
+}).on('error', (error) => {
+  console.log('MongoDB connection error:', error);
+  process.exit(1);
 });
 
 process.on('uncaughtException', (err) => {
